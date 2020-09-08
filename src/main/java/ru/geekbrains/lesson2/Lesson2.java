@@ -42,7 +42,7 @@ public class Lesson2 {
         System.out.println("-----------\ntask 6");
         int[] arrTask6 = {1, 2, 1, 2, 1, 1};
         System.out.println(Arrays.toString(arrTask6));
-        System.out.println(test(arrTask6));
+        System.out.println(isEquilateralArray(arrTask6));
 
         //task 7
         System.out.println("-----------\ntask 7");
@@ -136,7 +136,7 @@ public class Lesson2 {
     checkBalance ([2, 1, 1, 2, 1]) → false, checkBalance ([10, || 1, 2, 3, 4]) → true.
     Абстрактная граница показана символами ||, эти символы в массив не входят.
      */
-    private static boolean test(int[] arr) {
+    private static boolean isEquilateralArray (int[] arr) {
         for (int i = 0; i < arr.length - 1; i++) {
             int leftSum = 0, rightSum = 0;
             for (int j = 0; j <= i; j++) {
