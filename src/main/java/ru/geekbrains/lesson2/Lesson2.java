@@ -1,4 +1,4 @@
-package ru.geekbrains.lesson2;
+package ru.geekbrains.lesson3;
 
 import java.util.Arrays;
 
@@ -70,10 +70,9 @@ public class Lesson2 {
     Написать метод, который помощью цикла заполнит его значениями 1 4 7 10 13 16 19 22;
      */
     private static int[] fillArrayWithStep3(int[] arrTask2) {
-        int value = 1;
-        for (int i = 0; i < arrTask2.length; i++) {
-            arrTask2[i] = value;
-            value += 3;
+        arrTask2[0] = 1;
+        for (int i = 1; i < arrTask2.length; i++) {
+            arrTask2[i] = arrTask2[i-1] + 3;
         }
         return arrTask2;
     }
@@ -119,13 +118,8 @@ public class Lesson2 {
     private static int[][] getArrWithFilledDiagonal(int size) {
         int[][] arrTask5 = new int[size][size];
         for (int i = 0; i < arrTask5.length; i++) {
-            for (int j = 0; j < arrTask5[i].length; j++) {
-                if (i == j) {
-                    arrTask5[i][j] = 1;
-                } else if (j == arrTask5[i].length - 1 - i) {
-                    arrTask5[i][j] = 1;
-                }
-            }
+            arrTask5[i][i] = 1;
+            arrTask5[i][arrTask5.length-1-i] = 1;
         }
         return arrTask5;
     }
@@ -137,14 +131,13 @@ public class Lesson2 {
     Абстрактная граница показана символами ||, эти символы в массив не входят.
      */
     private static boolean isEquilateralArray (int[] arr) {
+        int leftSum = 0, rightSum = 0;
+        for (int i = 0; i < arr.length; i++) {
+            rightSum += arr[i];
+        }
         for (int i = 0; i < arr.length - 1; i++) {
-            int leftSum = 0, rightSum = 0;
-            for (int j = 0; j <= i; j++) {
-                leftSum += arr[j];
-            }
-            for (int j = i + 1; j < arr.length; j++) {
-                rightSum += arr[j];
-            }
+            leftSum += arr[i];
+            rightSum -= arr[i];
             if (leftSum == rightSum) {
                 return true;
             }
