@@ -215,27 +215,38 @@ public class Lesson3 {
             }
         }
 
-        // Проверка обратной диагонали
-        // Не работает, лучше поберечь глаза)
         count = 0;
+        int x, y;
         for (int i = 0; i <= MAX_Y - COUNT_WIN; i++) {
             for (int j = 0; j <= MAX_X - COUNT_WIN; j++) {
                 count = 0;
-                for (int m = 0, k = 0; m < MAX_Y - i && k < MAX_X - j; m++, k++) {
-                    if (field[i + m][MAX_X - j - k - 1] == HUMAN_DOT) {
+
+                for (int m = 0; m < MAX_Y - i && m < MAX_X - j; m++) {
+                    x = j + m;
+                    y = MAX_Y - (i + m) - 1;
+                    if (field[y][x] == HUMAN_DOT) {
                         count++;
                         if (count >= COUNT_WIN - 2) {
-                            int x = i + m;
-                            int y = MAX_X - j - k - 1;
-                            for (int l = 0; l < y; l++) {
-                                if (isEmptyPlace(x - l, y + l)) {
-                                    field[y + l][x - l] = AI_DOT;
+                            int xNew = x, yNew = y;
+                            while (--xNew >= 0 && ++yNew < MAX_Y) {
+                                if (isEmptyPlace(xNew,yNew)){
+                                    System.out.println("diag");
+                                    field[yNew][xNew] = AI_DOT;
+                                    return;
+                                }
+                            }
+                            xNew = x;
+                            yNew = y;
+                            while (++xNew < MAX_X && --yNew >=0){
+                                if (isEmptyPlace(xNew, yNew)){
+                                    System.out.println("diag");
+                                    field[yNew][xNew] = AI_DOT;
                                     return;
                                 }
                             }
                         }
 
-                    } else if (count > 0 && (i + m + 1 < MAX_Y && j + k + 1 < MAX_X && field[i + m + 1][j + k + 1] == EMPTY_DOT || (i + m + 1 == MAX_Y || j + k + 1 == MAX_X)))
+                    } else if (count > 0)
                         break;
                 }
             }
@@ -244,7 +255,7 @@ public class Lesson3 {
 
         // Рандомный ход, если не надо защищаться
         Random random = new Random();
-        int x, y;
+//        int x, y;
         do {
             x = random.nextInt(MAX_X);
             y = random.nextInt(MAX_Y);
