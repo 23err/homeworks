@@ -13,7 +13,6 @@ public class SettingWindow extends JFrame {
     public static final int MIN_COUNT_FIELD = 3;
     public static final int MAX_COUNT_FIELD = 10;
     public static final int MIN_COUNT_WIN = 3;
-    public static final int MAX_COUNT_WIN = 10;
     public static final String FIELD_SIZE_PREFIX = "Количество ячеек: ";
     public static final String WIN_FIELD_SIZE_PREFIX = "Количество ячеек для победы: ";
 
@@ -27,18 +26,27 @@ public class SettingWindow extends JFrame {
     private JRadioButton radioHumanVSHuman;
 
 
+    @Override
+    public void setVisible(boolean b) {
+        super.setVisible(b);
+        setLocationRelativeTo(gameWindow);
+    }
+
     public SettingWindow(GameWindow gameWindow){
         this.gameWindow = gameWindow;
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setResizable(false);
         setLocationRelativeTo(gameWindow);
+
         setTitle("Настройки игры в крестики нолики");
 
-        setLayout(new GridLayout(10,1));
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridLayout(10,1));
+        add(mainPanel, BorderLayout.CENTER);
 
         //select game mod
         JLabel labelGameMode = new JLabel("Режим игры:");
-        add(labelGameMode);
+        mainPanel.add(labelGameMode);
 
 
         groupGameMode = new ButtonGroup();
@@ -49,31 +57,32 @@ public class SettingWindow extends JFrame {
         groupGameMode.add(radioHumanVSAI);
         groupGameMode.add(radioHumanVSHuman);
 
-        add(radioHumanVSAI);
-        add(radioHumanVSHuman);
+        mainPanel.add(radioHumanVSAI);
+        mainPanel.add(radioHumanVSHuman);
 
         //count field for game
         final JLabel labelCountField = new JLabel(FIELD_SIZE_PREFIX + MIN_COUNT_FIELD);
-        add(labelCountField);
+        mainPanel.add(labelCountField);
         sliderCountField = new JSlider(MIN_COUNT_FIELD, MAX_COUNT_FIELD, MIN_COUNT_FIELD);
-        add(sliderCountField);
+        mainPanel.add(sliderCountField);
         sliderCountField.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 labelCountField.setText(FIELD_SIZE_PREFIX + sliderCountField.getValue());
+                sliderCountForWin.setMaximum(sliderCountField.getValue());
             }
         });
 
         //count for win group
         final JLabel labelCountForWin = new JLabel(WIN_FIELD_SIZE_PREFIX + MIN_COUNT_WIN);
-        add(labelCountForWin);
+        mainPanel.add(labelCountForWin);
 
-        sliderCountForWin = new JSlider(MIN_COUNT_WIN, MAX_COUNT_WIN, MIN_COUNT_WIN);
+        sliderCountForWin = new JSlider(MIN_COUNT_WIN, sliderCountField.getValue(), MIN_COUNT_WIN);
         sliderCountForWin.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 labelCountForWin.setText(WIN_FIELD_SIZE_PREFIX + sliderCountForWin.getValue());
             }
         });
-        add(sliderCountForWin);
+        mainPanel.add(sliderCountForWin);
 
 
         JPanel footerPanel = new JPanel();
