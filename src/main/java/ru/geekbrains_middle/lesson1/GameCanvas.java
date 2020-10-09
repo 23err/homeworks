@@ -1,4 +1,4 @@
-package ru.geekbrains.java_two.lesson_a.online;
+package ru.geekbrains_middle.lesson1;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,8 +15,10 @@ public class GameCanvas extends JPanel {
     }
 
     @Override
-    protected void paintComponent(Graphics g) { // while (true) {
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+//        setBackground(new Color(0,105,179));
+        setBackground(new Background(getBackground()));
         long currentTime = System.nanoTime();
         float deltaTime = (currentTime - lastFrameTime) * 0.000000001f;
         controller.onDrawFrame(this, g, deltaTime);
@@ -26,7 +28,7 @@ public class GameCanvas extends JPanel {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        repaint();                              // }
+        repaint();
     }
 
     public int getLeft() { return 0; }

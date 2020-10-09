@@ -1,7 +1,10 @@
-package ru.geekbrains.java_two.lesson_a.online;
+package ru.geekbrains_middle.lesson1;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Arrays;
 
 public class MainCircles extends JFrame {
     private static final int POS_X = 400;
@@ -28,7 +31,25 @@ public class MainCircles extends JFrame {
         initApplication();
         setTitle("Circles");
         setVisible(true);
+        /*
+         * Реализовать добавление новых кружков по клику используя ТОЛЬКО массивы
+         ** Реализовать по клику другой кнопки удаление кружков (никаких эррейЛист)
+         */
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1){
+                    sprites = Arrays.copyOf(sprites, sprites.length+1);
+                    sprites[sprites.length - 1] = new Ball();
+
+
+                }
+                else if(e.getButton() == MouseEvent.BUTTON3 && sprites.length > 0)
+                    sprites = Arrays.copyOf(sprites, sprites.length -1);
+            }
+        });
     }
+
 
     private void initApplication() {
         for (int i = 0; i < sprites.length; i++) {
