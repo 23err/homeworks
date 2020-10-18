@@ -148,7 +148,6 @@ public class ClientGUI extends JFrame implements
 
     @Override
     public void insertUpdate(DocumentEvent e) {
-        System.out.println("e.getLength() = " + e.getLength());
         try {
             writeLogFile(e.getDocument().getText(e.getOffset(), e.getLength()));
         } catch (BadLocationException badLocationException) {
