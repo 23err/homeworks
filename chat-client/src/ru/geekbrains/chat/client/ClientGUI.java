@@ -11,15 +11,19 @@ import java.awt.event.ActionListener;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class ClientGUI extends JFrame implements ActionListener,
         Thread.UncaughtExceptionHandler, SocketThreadListener {
 
+    private final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+
+    private final JTextArea log = new JTextArea();
     private static final int WIDTH = 400;
     private static final int HEIGHT = 300;
 
-    private final JTextArea log = new JTextArea();
     private final JPanel panelTop = new JPanel(new GridLayout(2, 3));
     private final JTextField tfIPAddress = new JTextField("127.0.0.1");
     private final JTextField tfPort = new JTextField("8189");
@@ -189,8 +193,37 @@ public class ClientGUI extends JFrame implements ActionListener,
 
     @Override
     public void onReceiveString(SocketThread thread, Socket socket, String msg) {
+        System.out.println("msg = " + msg);
+        String[] params = msg.split(Library.DELIMITER);
+        if (params.length == 0) return;
 
-        putLog(msg);
+        switch (params[0]) {
+            case Library.TYPE_BROADCAST: {
+                if (params.length > 3){
+                    Long timestamp = Long.parseLong(params[1]);
+                    Date date = new Date((long)timestamp);
+                    putLog(String.format("%s - %s says :%n %s", DATE_FORMAT.format(date), params[2], params[3]));
+                }
+                break;
+            }
+            case Library.AUTH_ACCEPT: {
+                if (params.length > 1) {
+
+                    putLog("You logged in as " + params[1]);
+                }
+                break;
+            }
+            case Library.AUTH_DENIED: {
+                putLog("Authentification filed. Try again.");
+                break;
+            }
+
+            case Library.MSG_FORMAT_ERROR: {
+                putLog("Error: " + msg);
+                break;
+            }
+        }
+
     }
 
     @Override
