@@ -1,5 +1,6 @@
 package ru.geekbrains.chat.client;
 
+import ru.geekbrains.chat.common.Library;
 import ru.geekbrains.network.SocketThread;
 import ru.geekbrains.network.SocketThreadListener;
 
@@ -53,6 +54,7 @@ public class ClientGUI extends JFrame implements ActionListener,
         btnSend.addActionListener(this);
         tfMessage.addActionListener(this);
         btnLogin.addActionListener(this);
+        btnDisconnect.addActionListener(this);
 
         panelTop.add(tfIPAddress);
         panelTop.add(tfPort);
@@ -63,6 +65,7 @@ public class ClientGUI extends JFrame implements ActionListener,
         panelBottom.add(btnDisconnect, BorderLayout.WEST);
         panelBottom.add(tfMessage, BorderLayout.CENTER);
         panelBottom.add(btnSend, BorderLayout.EAST);
+        panelBottom.setVisible(false);
 
         add(scrollLog, BorderLayout.CENTER);
         add(scrollUser, BorderLayout.EAST);
@@ -90,6 +93,8 @@ public class ClientGUI extends JFrame implements ActionListener,
             sendMessage();
         } else if (src == btnLogin) {
             connect();
+        } else if (src == btnDisconnect) {
+            socketThread.close();
         } else {
             showException(Thread.currentThread(), new RuntimeException("Unknown action source: " + src));
         }
@@ -102,7 +107,6 @@ public class ClientGUI extends JFrame implements ActionListener,
         } catch (IOException e) {
             showException(Thread.currentThread(), e);
         }
-
     }
 
     private void sendMessage() {
@@ -161,7 +165,7 @@ public class ClientGUI extends JFrame implements ActionListener,
 
     /**
      * Socket thread listener methods
-     * */
+     */
 
     @Override
     public void onSocketStart(SocketThread thread, Socket socket) {
@@ -170,16 +174,22 @@ public class ClientGUI extends JFrame implements ActionListener,
 
     @Override
     public void onSocketStop(SocketThread thread) {
-        putLog("Stop");
+        panelBottom.setVisible(false);
+        panelTop.setVisible(true);
     }
 
     @Override
     public void onSocketReady(SocketThread thread, Socket socket) {
-        putLog("Ready");
+        panelBottom.setVisible(true);
+        panelTop.setVisible(false);
+        String login = tfLogin.getText();
+        String password = new String(tfPassword.getPassword());
+        thread.sendMessage(Library.getAuthRequest(login, password));
     }
 
     @Override
     public void onReceiveString(SocketThread thread, Socket socket, String msg) {
+
         putLog(msg);
     }
 
