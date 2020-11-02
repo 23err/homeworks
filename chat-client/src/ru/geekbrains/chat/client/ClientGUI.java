@@ -58,7 +58,8 @@ public class ClientGUI extends JFrame implements ActionListener,
         btnSend.addActionListener(this);
         tfMessage.addActionListener(this);
         btnLogin.addActionListener(this);
-        btnDisconnect.addActionListener(this);
+
+
 
         panelTop.add(tfIPAddress);
         panelTop.add(tfPort);
@@ -208,7 +209,6 @@ public class ClientGUI extends JFrame implements ActionListener,
             }
             case Library.AUTH_ACCEPT: {
                 if (params.length > 1) {
-
                     putLog("You logged in as " + params[1]);
                 }
                 break;
